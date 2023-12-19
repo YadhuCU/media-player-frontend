@@ -1,11 +1,25 @@
 import { useState } from "react";
+import { addToHistoryAPI } from "../services/allAPI";
 import { Card, Modal } from "react-bootstrap";
 
-export default function VideoCard() {
+export default function VideoCard({ video }) {
   const [show, setShow] = useState(false);
 
   const handleClose = () => setShow(false);
-  const handleShow = () => setShow(true);
+  const handleShow = async () => {
+    setShow(true);
+    // generate data to store to json-server.
+    const { caption, videoURL } = video;
+    let today = new Date();
+    let timeStamp = today.toLocaleString();
+
+    const videoHistory = {
+      caption,
+      videoURL,
+      timeStamp,
+    };
+    await addToHistoryAPI(videoHistory);
+  };
 
   return (
     <>
@@ -17,13 +31,13 @@ export default function VideoCard() {
             objectFit: "cover",
           }}
           variant="top"
-          src="https://source.unsplash.com/the-walking-dead-dvd-movie-wMkaMXTJjlQ"
+          src={video?.imageURL}
         />
         <Card.Body>
           <Card.Title className="d-flex justify-content-between align-items-center">
-            <h6>Card Title</h6>
+            <h6>{video?.caption}</h6>
             <button className="btn">
-              <i class="fa-solid fa-trash"></i>
+              <i className="fa-solid fa-trash"></i>
             </button>
           </Card.Title>
         </Card.Body>
@@ -31,15 +45,16 @@ export default function VideoCard() {
 
       <Modal show={show} onHide={handleClose}>
         <Modal.Header closeButton>
-          <Modal.Title>Video Title</Modal.Title>
+          <Modal.Title>{video?.caption}</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <iframe
             width="100%"
             height="387"
-            src="https://www.youtube.com/embed/u8aCas4b9ck?autoplay=1"
-            title="[EN] 2023 PMGC Grand Finals | Day 3 | PUBG MOBILE Global Championship"
+            src={`${video?.videoURL}?autoplay=1`}
+            title={video?.caption}
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+            frameBorder="0"
             allowFullScreen
           />
         </Modal.Body>

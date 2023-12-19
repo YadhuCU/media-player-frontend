@@ -1,7 +1,26 @@
 import { Link } from "react-router-dom";
 import { Table } from "react-bootstrap";
+import { useState, useEffect } from "react";
+import { getFromHistoryAPI } from "../services/allAPI";
 
 export default function WatchHistory() {
+  const [history, setHistory] = useState([]);
+
+  useEffect(() => {
+    getHistory();
+  }, []);
+
+  const getHistory = async () => {
+    const result = await getFromHistoryAPI();
+
+    if (result.status === 200) {
+      setHistory(result.data);
+    } else {
+      console.log("API Failed");
+      console.log(result.message);
+    }
+  };
+
   return (
     <>
       <div className="container my-5 d-flex justify-content-between">
@@ -34,22 +53,27 @@ export default function WatchHistory() {
             </tr>
           </thead>
           <tbody>
-            <tr>
-              <td>1</td>
-              <td>Vidoe Title</td>
-              <td>
-                <a
-                  href="https://www.youtube.com/watch?v=Ym-b37of5u8"
-                  target="_blank"
-                >
-                  https://www.youtube.com/watch?v=Ym-b37of5u8
-                </a>
-              </td>
-              <td>13/12/2023</td>
-              <td className="d-flex justify-content-center">
-                <i class="fa-solid fa-trash"></i>
-              </td>
-            </tr>
+            {history?.length > 0 ? (
+              history.map((item, index) => (
+                <tr key={index}>
+                  <td>{index + 1}</td>
+                  <td>{item.caption}</td>
+                  <td>
+                    <a href={item.videoURL} target="_blank">
+                      {item.videoURL}
+                    </a>
+                  </td>
+                  <td>{item.timeStamp}</td>
+                  <td className="d-flex justify-content-center">
+                    <i className="fa-solid fa-trash"></i>
+                  </td>
+                </tr>
+              ))
+            ) : (
+              <tr>
+                <td>Watch history is empty</td>
+              </tr>
+            )}
           </tbody>
         </Table>
       </div>

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Modal, Form, Button, FloatingLabel } from "react-bootstrap";
+import { Modal, Form, Button } from "react-bootstrap";
 
 export default function Category() {
   const [show, setShow] = useState(false);
@@ -9,9 +9,9 @@ export default function Category() {
 
   return (
     <>
-      <div className="grid">
+      <div className="row">
         <Button variant="primary" onClick={handleShow}>
-          Launch static backdrop modal
+          Category
         </Button>
       </div>
 

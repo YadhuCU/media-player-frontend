@@ -132,9 +132,8 @@ export default function LandingPage() {
             height="387"
             src="https://www.youtube.com/embed/u8aCas4b9ck"
             title="[EN] 2023 PMGC Grand Finals | Day 3 | PUBG MOBILE Global Championship"
-            frameBorder="0"
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-            allowfullscreen
+            allowFullScreen
           />
         </div>
       </div>

@@ -1,11 +1,60 @@
 import { useState } from "react";
 import Button from "react-bootstrap/Button";
 import Modal from "react-bootstrap/Modal";
-
 import Form from "react-bootstrap/Form";
+import { addNewVideoAPI } from "../services/allAPI";
 
-export default function Add() {
+export default function Add({ setUploadVideoResponse }) {
   const [show, setShow] = useState(false);
+  const [uploadVideo, setUploadVideo] = useState({
+    id: "",
+    caption: "",
+    imageURL: "",
+    videoURL: "",
+  });
+
+  const handleVideoULR = (e) => {
+    const { value } = e.target;
+
+    if (value.includes("v=")) {
+      let videoId = value.split("v=")[1].slice(0, 11);
+      setUploadVideo({
+        ...uploadVideo,
+        videoURL: `https://youtube.com/embed/${videoId}`,
+      });
+    } else {
+      setUploadVideo({
+        ...uploadVideo,
+        videoURL: "",
+      });
+    }
+  };
+
+  const handleUpload = async () => {
+    const { id, caption, imageURL, videoURL } = uploadVideo;
+
+    if (!id || !caption || !imageURL || !videoURL) {
+      alert("Uploading form is icomplete. Please fill completely..");
+    } else {
+      try {
+        const result = await addNewVideoAPI(uploadVideo);
+        if (result.status >= 200 && result.status < 300) {
+          handleClose();
+          setUploadVideo({
+            id: "",
+            caption: "",
+            imageURL: "",
+            videoURL: "",
+          });
+          setUploadVideoResponse(result.data);
+        } else {
+          console.log("handleUpload err:", result.message);
+        }
+      } catch (err) {
+        console.log("handleUpload API err: ", err);
+      }
+    }
+  };
 
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
@@ -20,7 +69,7 @@ export default function Add() {
             border: "none",
             fontSize: "1.5rem",
             color: "inherit",
-            paddingLeft: "5px"
+            paddingLeft: "5px",
           }}
         >
           <i className="fa-solid fa-upload"></i>
@@ -33,43 +82,51 @@ export default function Add() {
         backdrop="static"
         keyboard={false}
       >
-        <Form>
-          <Modal.Header closeButton>
-            <Modal.Title>Upload New Video</Modal.Title>
-          </Modal.Header>
-          <Modal.Body>
-            <p>Please Fill the details.</p>
-            <Form.Control
-              className="bg-dark text-secondary my-3"
-              type="text"
-              placeholder="Uploading video Id"
-            />
-            <Form.Control
-              className="bg-dark text-secondary my-3"
-              type="text"
-              placeholder="Uploading video Caption"
-            />
-            <Form.Control
-              className="bg-dark text-secondary my-3"
-              type="text"
-              placeholder="Uploading video ImageURL"
-            />
-            <Form.Control
-              className="bg-dark text-secondary my-3"
-              type="text"
-              placeholder="Uploading video Youtube Link"
-              color="inherit"
-            />
-          </Modal.Body>
-          <Modal.Footer>
-            <Button variant="secondary" onClick={handleClose}>
-              Cancle
-            </Button>
-            <Button variant="primary" type="submit">
-              Upload
-            </Button>
-          </Modal.Footer>
-        </Form>
+        <Modal.Header closeButton>
+          <Modal.Title>Upload New Video</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <p>Please Fill the details.</p>
+          <Form.Control
+            className="bg-dark text-secondary my-3"
+            type="text"
+            placeholder="Uploading video Id"
+            onChange={(e) =>
+              setUploadVideo({ ...uploadVideo, id: e.target.value })
+            }
+          />
+          <Form.Control
+            className="bg-dark text-secondary my-3"
+            type="text"
+            placeholder="Uploading video Caption"
+            onChange={(e) =>
+              setUploadVideo({ ...uploadVideo, caption: e.target.value })
+            }
+          />
+          <Form.Control
+            className="bg-dark text-secondary my-3"
+            type="text"
+            placeholder="Uploading video ImageURL"
+            onChange={(e) =>
+              setUploadVideo({ ...uploadVideo, imageURL: e.target.value })
+            }
+          />
+          <Form.Control
+            className="bg-dark text-secondary my-3"
+            type="text"
+            placeholder="Uploading video Youtube Link"
+            color="inherit"
+            onChange={(e) => handleVideoULR(e)}
+          />
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={handleClose}>
+            Cancel
+          </Button>
+          <Button onClick={handleUpload} variant="primary">
+            Upload
+          </Button>
+        </Modal.Footer>
       </Modal>
     </>
   );
