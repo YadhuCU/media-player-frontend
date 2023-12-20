@@ -1,8 +1,8 @@
 import { useState } from "react";
-import { addToHistoryAPI } from "../services/allAPI";
+import { addToHistoryAPI, deleteVideoAPI } from "../services/allAPI";
 import { Card, Modal } from "react-bootstrap";
 
-export default function VideoCard({ video }) {
+export default function VideoCard({ video, setDeleteResponse }) {
   const [show, setShow] = useState(false);
 
   const handleClose = () => setShow(false);
@@ -21,6 +21,15 @@ export default function VideoCard({ video }) {
     await addToHistoryAPI(videoHistory);
   };
 
+  const removeVideo = async (id) => {
+    try {
+      await deleteVideoAPI(id);
+      setDeleteResponse(true);
+    } catch {
+      console.log("setDeleteResponse Err: ", err);
+    }
+  };
+
   return (
     <>
       <Card className="my-3">
@@ -37,7 +46,10 @@ export default function VideoCard({ video }) {
           <Card.Title className="d-flex justify-content-between align-items-center">
             <h6>{video?.caption}</h6>
             <button className="btn">
-              <i className="fa-solid fa-trash"></i>
+              <i
+                onClick={() => removeVideo(video?.id)}
+                className="fa-solid fa-trash"
+              ></i>
             </button>
           </Card.Title>
         </Card.Body>

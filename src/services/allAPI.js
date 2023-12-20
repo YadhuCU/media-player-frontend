@@ -62,3 +62,11 @@ export const getAllCategoryAPI = async () => {
     url: `${SERVER_URL}/categories/`,
   });
 };
+// Remove Category
+export const removeCategoryAPI = async (id) => {
+  return await commonAPI({
+    method: "DELETE",
+    url: `${SERVER_URL}/categories/${id}`,
+    reqBody: {},
+  });
+};

@@ -5,23 +5,19 @@ import { useState, useEffect } from "react";
 import { getAllVideoAPI } from "../services/allAPI";
 
 export default function View({ uploadVideoResponse }) {
-  console.log("mounting..");
+  const [deleteResponse, setDeleteResponse] = useState(false);
   const [allVideos, setAllVideos] = useState([]);
 
-  console.log(uploadVideoResponse);
   useEffect(() => {
-    console.log("in useEffect..hook");
     getUploadedVideos();
-    console.log("in useEffect..hook 1");
-  }, [uploadVideoResponse]);
+    setDeleteResponse(false);
+  }, [uploadVideoResponse, deleteResponse]);
 
   const getUploadedVideos = async () => {
     try {
       const result = await getAllVideoAPI();
-      console.log("getUploadedVideos result: ", result);
       if (result.status === 200) {
         setAllVideos(result.data);
-        console.log("getUploadedVideos status 200: ");
       } else {
         console.log("getUploadedVideos err: ", result.message);
       }
@@ -36,7 +32,7 @@ export default function View({ uploadVideoResponse }) {
         {allVideos?.length > 0 ? (
           allVideos.map((video, index) => (
             <Col key={index} sm={10} md={6} lg={4} xl={3}>
-              <VideoCard video={video} />
+              <VideoCard video={video} setDeleteResponse={setDeleteResponse} />
             </Col>
           ))
         ) : (

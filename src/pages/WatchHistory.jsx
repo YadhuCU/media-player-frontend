@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import { Table } from "react-bootstrap";
 import { useState, useEffect } from "react";
-import { getFromHistoryAPI } from "../services/allAPI";
+import { getFromHistoryAPI, removeFromHistoryAPI } from "../services/allAPI";
 
 export default function WatchHistory() {
   const [history, setHistory] = useState([]);
@@ -18,6 +18,15 @@ export default function WatchHistory() {
     } else {
       console.log("API Failed");
       console.log(result.message);
+    }
+  };
+
+  const removeHistoryItem = async (id) => {
+    try {
+      await removeFromHistoryAPI(id);
+      getHistory();
+    } catch (err) {
+      console.log("removeFromHistoryAPI Err: ", err);
     }
   };
 
@@ -65,13 +74,18 @@ export default function WatchHistory() {
                   </td>
                   <td>{item.timeStamp}</td>
                   <td className="d-flex justify-content-center">
-                    <i className="fa-solid fa-trash"></i>
+                    <i
+                      onClick={() => removeHistoryItem(item?.id)}
+                      className="fa-solid fa-trash"
+                    ></i>
                   </td>
                 </tr>
               ))
             ) : (
               <tr>
-                <td>Watch history is empty</td>
+                <td>
+                  <p className="h3 text-warning">Watch history is empty...!!</p>
+                </td>
               </tr>
             )}
           </tbody>
