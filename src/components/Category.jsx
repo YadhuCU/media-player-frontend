@@ -3,7 +3,9 @@ import { Modal, Form, Button } from "react-bootstrap";
 import {
   addCategoryAPI,
   getAllCategoryAPI,
+  getVideoAPI,
   removeCategoryAPI,
+  updateCategoryAPI,
 } from "../services/allAPI";
 
 export default function Category() {
@@ -52,6 +54,22 @@ export default function Category() {
     }
   };
 
+  const dragOver = (e) => {
+    console.log("Dragovering....");
+    e.preventDefault();
+  };
+
+  const videoDrop = async (e, categoryId) => {
+    const videoId = e.dataTransfer.getData("videoId");
+    console.log("Droped, CategoryId: " + categoryId + " videoId " + videoId);
+
+    const { data } = await getVideoAPI(videoId);
+    const category = allCategories.find((item) => item.id === categoryId);
+    category.allVideo.push(data);
+
+    await updateCategoryAPI(categoryId, category);
+  };
+
   return (
     <>
       <div className="row">
@@ -63,6 +81,9 @@ export default function Category() {
             <div
               key={index}
               className="rounded border border-secondary p-2 mt-2"
+              droppable="true"
+              onDragOver={(e) => dragOver(e)}
+              onDrop={(e) => videoDrop(e, item?.id)}
             >
               <div className="d-flex justify-content-between align-items-center">
                 <h4>{item.categoryName}</h4>

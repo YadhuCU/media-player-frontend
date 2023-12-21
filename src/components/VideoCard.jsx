@@ -30,9 +30,19 @@ export default function VideoCard({ video, setDeleteResponse }) {
     }
   };
 
+  const dragStarted = (e, id) => {
+    console.log("dragging started,", id);
+    console.log("event", e);
+    e.dataTransfer.setData("videoId", id);
+  };
+
   return (
     <>
-      <Card className="my-3">
+      <Card
+        className="my-3"
+        draggable
+        onDragStart={(e) => dragStarted(e, video?.id)}
+      >
         <Card.Img
           onClick={handleShow}
           height={"200px"}
