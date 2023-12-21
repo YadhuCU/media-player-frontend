@@ -36,7 +36,7 @@ export default function View({ uploadVideoResponse }) {
             </Col>
           ))
         ) : (
-          <p className="text-warning">Loding....</p>
+          <p className="text-warning">Nothing uploaded yet.. Add Video</p>
         )}
       </Row>
     </>

@@ -7,7 +7,6 @@ import { addNewVideoAPI } from "../services/allAPI";
 export default function Add({ setUploadVideoResponse }) {
   const [show, setShow] = useState(false);
   const [uploadVideo, setUploadVideo] = useState({
-    id: "",
     caption: "",
     imageURL: "",
     videoURL: "",
@@ -31,9 +30,9 @@ export default function Add({ setUploadVideoResponse }) {
   };
 
   const handleUpload = async () => {
-    const { id, caption, imageURL, videoURL } = uploadVideo;
+    const { caption, imageURL, videoURL } = uploadVideo;
 
-    if (!id || !caption || !imageURL || !videoURL) {
+    if (!caption || !imageURL || !videoURL) {
       alert("Uploading form is icomplete. Please fill completely..");
     } else {
       try {
@@ -41,7 +40,6 @@ export default function Add({ setUploadVideoResponse }) {
         if (result.status >= 200 && result.status < 300) {
           handleClose();
           setUploadVideo({
-            id: "",
             caption: "",
             imageURL: "",
             videoURL: "",
@@ -90,15 +88,7 @@ export default function Add({ setUploadVideoResponse }) {
           <Form.Control
             className="bg-dark text-secondary my-3"
             type="text"
-            placeholder="Uploading video Id"
-            onChange={(e) =>
-              setUploadVideo({ ...uploadVideo, id: e.target.value })
-            }
-          />
-          <Form.Control
-            className="bg-dark text-secondary my-3"
-            type="text"
-            placeholder="Uploading video Caption"
+            placeholder="Video Caption"
             onChange={(e) =>
               setUploadVideo({ ...uploadVideo, caption: e.target.value })
             }
@@ -106,7 +96,7 @@ export default function Add({ setUploadVideoResponse }) {
           <Form.Control
             className="bg-dark text-secondary my-3"
             type="text"
-            placeholder="Uploading video ImageURL"
+            placeholder="Video ImageURL"
             onChange={(e) =>
               setUploadVideo({ ...uploadVideo, imageURL: e.target.value })
             }
@@ -114,7 +104,7 @@ export default function Add({ setUploadVideoResponse }) {
           <Form.Control
             className="bg-dark text-secondary my-3"
             type="text"
-            placeholder="Uploading video Youtube Link"
+            placeholder="Video Youtube Link"
             color="inherit"
             onChange={(e) => handleVideoULR(e)}
           />
