@@ -7,6 +7,8 @@ import { Link } from "react-router-dom";
 
 export default function Home() {
   const [uploadVideoResponse, setUploadVideoResponse] = useState({});
+  const [response, setResponse] = useState({});
+
   return (
     <>
       <div className="container my-5 d-flex justify-content-between">
@@ -29,10 +31,13 @@ export default function Home() {
       <div className="container-fluid my-5 row w-100">
         <div className="all-videos col-lg-9">
           <h2>All uploaded Videos</h2>
-          <View uploadVideoResponse={uploadVideoResponse} />
+          <View
+            uploadVideoResponse={uploadVideoResponse}
+            setResponse={setResponse}
+          />
         </div>
         <div className="category col-lg-3">
-          <Category />
+          <Category response={response} />
         </div>
       </div>
     </>

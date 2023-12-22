@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Modal, Form, Button } from "react-bootstrap";
+import { Modal, Form, Button, Row, Col, Collapse } from "react-bootstrap";
 import {
   addCategoryAPI,
   getAllCategoryAPI,
@@ -7,9 +7,11 @@ import {
   removeCategoryAPI,
   updateCategoryAPI,
 } from "../services/allAPI";
+import VideoCard from "./VideoCard";
 
-export default function Category() {
+export default function Category({ response }) {
   const [show, setShow] = useState(false);
+  const [open, setOpen] = useState(false);
   const [categoryName, setCategoryName] = useState("");
   const [allCategories, setAllCategories] = useState([]);
 
@@ -18,7 +20,7 @@ export default function Category() {
 
   useEffect(() => {
     getAllCategories();
-  }, [categoryName]);
+  }, [response]);
 
   const getAllCategories = async () => {
     try {
@@ -54,20 +56,28 @@ export default function Category() {
     }
   };
 
-  const dragOver = (e) => {
-    console.log("Dragovering....");
-    e.preventDefault();
-  };
-
   const videoDrop = async (e, categoryId) => {
     const videoId = e.dataTransfer.getData("videoId");
-    console.log("Droped, CategoryId: " + categoryId + " videoId " + videoId);
 
-    const { data } = await getVideoAPI(videoId);
-    const category = allCategories.find((item) => item.id === categoryId);
-    category.allVideo.push(data);
+    try {
+      const { data } = await getVideoAPI(videoId);
+      const category = allCategories.find((item) => item.id === categoryId);
+      category.allVideo.push(data);
 
-    await updateCategoryAPI(categoryId, category);
+      try {
+        await updateCategoryAPI(categoryId, category);
+        getAllCategories();
+      } catch (err) {
+        console.log("videoDrop updateCategoryAPI err: ", err);
+      }
+    } catch (err) {
+      console.log("VideoDrop getVideoAPI err: ", err);
+    }
+  };
+
+  const videoDragStarted = (e, videoId, categoryId) => {
+    const data = { videoId, categoryId };
+    e.dataTransfer.setData("data", JSON.stringify(data));
   };
 
   return (
@@ -82,10 +92,13 @@ export default function Category() {
               key={index}
               className="rounded border border-secondary p-2 mt-2"
               droppable="true"
-              onDragOver={(e) => dragOver(e)}
+              onDragOver={(e) => e.preventDefault()}
               onDrop={(e) => videoDrop(e, item?.id)}
             >
-              <div className="d-flex justify-content-between align-items-center">
+              <div
+                onClick={() => setOpen(!open)}
+                className="d-flex justify-content-between align-items-center border-bottom border-primary"
+              >
                 <h4>{item.categoryName}</h4>
                 <button
                   onClick={() => removeCategory(item?.id)}
@@ -94,6 +107,25 @@ export default function Category() {
                   <i className="fa-solid fa-trash fa-danger"></i>
                 </button>
               </div>
+              <Collapse in={open}>
+                <Row>
+                  {item?.allVideo?.length > 0
+                    ? item.allVideo.map((video, index) => (
+                        <Col
+                          draggable
+                          onDragStart={(e) =>
+                            videoDragStarted(e, video.id, item.id)
+                          }
+                          key={index}
+                          sm={12}
+                          className="my-2"
+                        >
+                          <VideoCard video={video} insideCategory={true} />
+                        </Col>
+                      ))
+                    : null}
+                </Row>
+              </Collapse>
             </div>
           ))
         ) : (

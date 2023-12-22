@@ -2,9 +2,13 @@ import { Row, Col } from "react-bootstrap";
 import VideoCard from "./VideoCard";
 import { useState, useEffect } from "react";
 
-import { getAllVideoAPI } from "../services/allAPI";
+import {
+  getAllCategoryAPI,
+  getAllVideoAPI,
+  updateCategoryAPI,
+} from "../services/allAPI";
 
-export default function View({ uploadVideoResponse }) {
+export default function View({ uploadVideoResponse, setResponse }) {
   const [deleteResponse, setDeleteResponse] = useState(false);
   const [allVideos, setAllVideos] = useState([]);
 
@@ -26,9 +30,38 @@ export default function View({ uploadVideoResponse }) {
     }
   };
 
+  const videoDroped = async (e) => {
+    const { videoId, categoryId } = JSON.parse(e.dataTransfer.getData("data"));
+
+    try {
+      const { data } = await getAllCategoryAPI();
+      const category = data.find((item) => item.id == categoryId);
+      const newAllVideos = category.allVideo.filter(
+        (item) => item.id != videoId,
+      );
+      const { id } = category;
+      console.log(id);
+      try {
+        const result = await updateCategoryAPI(id, {
+          ...category,
+          allVideo: newAllVideos,
+        });
+        setResponse(result);
+      } catch (err) {
+        console.log("videoDroped updateCategoryAPI err: ", err);
+      }
+    } catch (err) {
+      console.log("videoDroped getAllCategoryAPI err: ", err);
+    }
+  };
+
   return (
     <>
-      <Row>
+      <Row
+        droppable="true"
+        onDragOver={(e) => e.preventDefault()}
+        onDrop={(e) => videoDroped(e)}
+      >
         {allVideos?.length > 0 ? (
           allVideos.map((video, index) => (
             <Col key={index} sm={10} md={6} lg={4} xl={3}>
