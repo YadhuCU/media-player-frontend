@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import { Row, Col } from "react-bootstrap";
 import VideoCard from "./VideoCard";
 import { useState, useEffect } from "react";

@@ -68,7 +68,7 @@ export default function WatchHistory() {
                   <td>{index + 1}</td>
                   <td>{item.caption}</td>
                   <td>
-                    <a href={item.videoURL} target="_blank">
+                    <a href={item.videoURL} target="_blank" rel="noreferrer">
                       {item.videoURL}
                     </a>
                   </td>

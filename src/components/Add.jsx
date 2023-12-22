@@ -4,6 +4,7 @@ import Modal from "react-bootstrap/Modal";
 import Form from "react-bootstrap/Form";
 import { addNewVideoAPI } from "../services/allAPI";
 
+// eslint-disable-next-line react/prop-types
 export default function Add({ setUploadVideoResponse }) {
   const [show, setShow] = useState(false);
   const [uploadVideo, setUploadVideo] = useState({

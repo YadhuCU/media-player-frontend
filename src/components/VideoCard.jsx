@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import { useState } from "react";
 import { addToHistoryAPI, deleteVideoAPI } from "../services/allAPI";
 import { Card, Modal } from "react-bootstrap";
@@ -29,7 +30,7 @@ export default function VideoCard({
     try {
       await deleteVideoAPI(id);
       setDeleteResponse(true);
-    } catch {
+    } catch (err) {
       console.log("setDeleteResponse Err: ", err);
     }
   };

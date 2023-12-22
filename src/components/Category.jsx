@@ -9,6 +9,7 @@ import {
 } from "../services/allAPI";
 import VideoCard from "./VideoCard";
 
+// eslint-disable-next-line react/prop-types
 export default function Category({ response }) {
   const [show, setShow] = useState(false);
   const [open, setOpen] = useState(false);
@@ -91,6 +92,7 @@ export default function Category({ response }) {
             <div
               key={index}
               className="rounded border border-secondary p-2 mt-2"
+              // eslint-disable-next-line react/no-unknown-property
               droppable="true"
               onDragOver={(e) => e.preventDefault()}
               onDrop={(e) => videoDrop(e, item?.id)}
