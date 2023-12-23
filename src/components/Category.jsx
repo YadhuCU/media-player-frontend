@@ -15,6 +15,7 @@ export default function Category({ response }) {
   const [open, setOpen] = useState(false);
   const [categoryName, setCategoryName] = useState("");
   const [allCategories, setAllCategories] = useState([]);
+  const [collapseCategory, setCollapseCategory] = useState("");
 
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
@@ -31,7 +32,6 @@ export default function Category({ response }) {
       console.log("getAllCategories Err: ", err);
     }
   };
-
   const handleAdd = async () => {
     if (!categoryName) alert("Pleace fill the form completely..");
     else {
@@ -59,12 +59,10 @@ export default function Category({ response }) {
 
   const videoDrop = async (e, categoryId) => {
     const videoId = e.dataTransfer.getData("videoId");
-
     try {
       const { data } = await getVideoAPI(videoId);
       const category = allCategories.find((item) => item.id === categoryId);
       category.allVideo.push(data);
-
       try {
         await updateCategoryAPI(categoryId, category);
         getAllCategories();
@@ -81,6 +79,10 @@ export default function Category({ response }) {
     e.dataTransfer.setData("data", JSON.stringify(data));
   };
 
+  const handleCollaps = (e) => {
+    setCollapseCategory(e);
+    setOpen(!open);
+  };
   return (
     <>
       <div className="row">
@@ -98,7 +100,7 @@ export default function Category({ response }) {
               onDrop={(e) => videoDrop(e, item?.id)}
             >
               <div
-                onClick={() => setOpen(!open)}
+                onClick={() => handleCollaps(item.categoryName)}
                 className="d-flex justify-content-between align-items-center border-bottom border-primary"
               >
                 <h4>{item.categoryName}</h4>
@@ -109,7 +111,7 @@ export default function Category({ response }) {
                   <i className="fa-solid fa-trash fa-danger"></i>
                 </button>
               </div>
-              <Collapse in={open}>
+              <Collapse in={open && item.categoryName === collapseCategory}>
                 <Row>
                   {item?.allVideo?.length > 0
                     ? item.allVideo.map((video, index) => (
