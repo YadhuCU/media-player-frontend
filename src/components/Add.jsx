@@ -71,7 +71,7 @@ export default function Add({ setUploadVideoResponse }) {
             paddingLeft: "5px",
           }}
         >
-          <i className="fa-solid fa-upload"></i>
+          <i style={{ overflow: "hidden" }} className="fa-solid fa-upload"></i>
         </button>
       </div>
 

@@ -25,7 +25,11 @@ export default function Home() {
           }}
           className="d-flex align-items-center"
         >
-          Watch History <i className="fa-solid fa-clock-rotate-left" />
+          Watch History{" "}
+          <i
+            style={{ overflow: "hidden" }}
+            className="fa-solid fa-clock-rotate-left"
+          />
         </Link>
       </div>
       <div className="container-fluid my-5 row w-100">
