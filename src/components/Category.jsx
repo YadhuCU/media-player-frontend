@@ -12,10 +12,9 @@ import VideoCard from "./VideoCard";
 // eslint-disable-next-line react/prop-types
 export default function Category({ response }) {
   const [show, setShow] = useState(false);
-  const [open, setOpen] = useState(false);
   const [categoryName, setCategoryName] = useState("");
   const [allCategories, setAllCategories] = useState([]);
-  const [collapseCategory, setCollapseCategory] = useState("");
+  const [collapseCategory, setCollapseCategory] = useState({});
 
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
@@ -79,10 +78,13 @@ export default function Category({ response }) {
     e.dataTransfer.setData("data", JSON.stringify(data));
   };
 
-  const handleCollaps = (e) => {
-    setCollapseCategory(e);
-    setOpen(!open);
+  const handleCollaps = (categoryName) => {
+    setCollapseCategory((prev) => {
+      if (!prev[categoryName]) return { ...prev, [categoryName]: true };
+      else return { ...prev, [categoryName]: false };
+    });
   };
+
   return (
     <>
       <div className="row">
@@ -100,7 +102,7 @@ export default function Category({ response }) {
               onDrop={(e) => videoDrop(e, item?.id)}
             >
               <div
-                onClick={() => handleCollaps(item.categoryName)}
+                onClick={() => handleCollaps(item?.categoryName)}
                 className="d-flex justify-content-between align-items-center border-bottom border-primary"
               >
                 <h4>{item.categoryName}</h4>
@@ -111,7 +113,7 @@ export default function Category({ response }) {
                   <i className="fa-solid fa-trash fa-danger"></i>
                 </button>
               </div>
-              <Collapse in={open && item.categoryName === collapseCategory}>
+              <Collapse in={collapseCategory[item?.categoryName]}>
                 <Row>
                   {item?.allVideo?.length > 0
                     ? item.allVideo.map((video, index) => (
