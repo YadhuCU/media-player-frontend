@@ -46,7 +46,12 @@ export default function WatchHistory() {
           }}
           className="d-flex align-items-center"
         >
-          <i className="mr-5 fa-solid fa-arrow-left" />
+          <i
+            style={{
+              overflow: "hidden",
+            }}
+            className="mr-5 fa-solid fa-arrow-left"
+          />
           Back to Home
         </Link>
       </div>
