@@ -54,6 +54,12 @@ export default function Category({ response }) {
     } catch (err) {
       console.log("removeCategory Err: ", err);
     }
+    if (id in collapseCategory) {
+      setCollapseCategory((prev) => {
+        delete prev[id];
+        return { ...prev };
+      });
+    }
   };
 
   const videoDrop = async (e, categoryId) => {
@@ -78,12 +84,13 @@ export default function Category({ response }) {
     e.dataTransfer.setData("data", JSON.stringify(data));
   };
 
-  const handleCollaps = (categoryName) => {
+  const handleCollaps = (categoryId) => {
     setCollapseCategory((prev) => {
-      if (!prev[categoryName]) return { ...prev, [categoryName]: true };
-      else return { ...prev, [categoryName]: false };
+      if (!prev[categoryId]) return { ...prev, [categoryId]: true };
+      else return { ...prev, [categoryId]: false };
     });
   };
+  console.log(collapseCategory);
 
   return (
     <>
@@ -102,7 +109,7 @@ export default function Category({ response }) {
               onDrop={(e) => videoDrop(e, item?.id)}
             >
               <div
-                onClick={() => handleCollaps(item?.categoryName)}
+                onClick={() => handleCollaps(item?.id)}
                 className="d-flex justify-content-between align-items-center border-bottom border-primary"
               >
                 <h4>{item.categoryName}</h4>
@@ -113,7 +120,7 @@ export default function Category({ response }) {
                   <i className="fa-solid fa-trash fa-danger"></i>
                 </button>
               </div>
-              <Collapse in={collapseCategory[item?.categoryName]}>
+              <Collapse in={collapseCategory[item?.id]}>
                 <Row>
                   {item?.allVideo?.length > 0
                     ? item.allVideo.map((video, index) => (
