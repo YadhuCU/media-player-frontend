@@ -41,7 +41,6 @@ export default function View({ uploadVideoResponse, setResponse }) {
         (item) => item.id != videoId,
       );
       const { id } = category;
-      console.log(id);
       try {
         const result = await updateCategoryAPI(id, {
           ...category,

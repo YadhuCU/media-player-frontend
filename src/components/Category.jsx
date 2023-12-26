@@ -90,7 +90,6 @@ export default function Category({ response }) {
       else return { ...prev, [categoryId]: false };
     });
   };
-  console.log(collapseCategory);
 
   return (
     <>
